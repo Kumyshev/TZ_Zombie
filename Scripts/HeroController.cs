@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -6,6 +7,7 @@ using UnityEngine.AI;
 public class HeroController : MonoBehaviour
 {
 
+    
     public Camera m_camera;
     public NavMeshAgent navAgent;
 
@@ -19,6 +21,9 @@ public class HeroController : MonoBehaviour
     private bool fireState = false;
 
     public Fire fire;
+
+    public ParticleSystem particle;
+
     private void Awake()
     {
         animator = gameObject.GetComponent<Animator>();
@@ -26,6 +31,7 @@ public class HeroController : MonoBehaviour
 
     private void Start()
     {
+        
         navAgent.speed = fire.settingGame.HeroSpeed;
     }
     // Update is called once per frame
@@ -81,6 +87,8 @@ public class HeroController : MonoBehaviour
             {
                 animator.SetBool("fire", true);
 
+                particle.Play();
+
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit))
                 {
@@ -90,11 +98,16 @@ public class HeroController : MonoBehaviour
             }
             else if (Input.GetMouseButtonUp(0))
             {
+                particle.Stop();
                 animator.SetBool("fire", false);
                 fire.isFire = false;
+
             }
         }
     }
+
+
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "tower")
